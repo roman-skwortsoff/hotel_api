@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Добавить размещение</title>
+</head>
+<body>
+    <h2>Добавить новое размещение</h2>
+    <form method="POST">
+        <label>Название: <input type="text" name="name" required></label><br>
+
+        <label>Тип:
+            <select name="type" required>
+                <option value="hotel_room">Отельный номер</option>
+                <option value="guest_house">Гостевой дом</option>
+                <option value="gazebo">Беседка</option>
+            </select>
+        </label><br>
+
+        <label>Краткое описание: <input type="text" name="short_description"></label><br>
+        <label>Полное описание: <textarea name="full_description"></textarea></label><br>
+        <label>Изображение (URL): <input type="text" name="image"></label><br>
+        <label>Вместимость: <input type="number" name="capacity" required></label><br>
+        <label>Количество: <input type="number" name="count" value="1" required></label><br>
+        <label>Время заезда: <input type="time" name="check_in_time" value="15:00"></label><br>
+        <label>Время выезда: <input type="time" name="check_out_time" value="12:00"></label><br>
+        <label>Доп. места: <input type="number" name="extra_beds_available" value="0"></label><br>
+
+        <h3>Цены:</h3>
+        <div class="price-entry">
+            <h4>Будний день</h4>
+            <label>Цена: <input type="number" name="weekday_price" required></label><br>
+            <label>Цена доп. места: <input type="number" name="weekday_extra_bed_price"></label>
+        </div>
+
+        <div class="price-entry">
+            <h4>Выходной день</h4>
+            <label>Цена: <input type="number" name="weekend_price" required></label><br>
+            <label>Цена доп. места: <input type="number" name="weekend_extra_bed_price"></label>
+        </div>
+
+        <br>
+        <button type="submit">Создать</button>
+    </form>
+</body>
+</html>
