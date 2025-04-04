@@ -64,11 +64,10 @@ async def create_accommodation(
                 ))
                 print( "Записываем цену: ", new_accommodation.id, Weekday(price.weekday_type), price.price, price.extra_bed_price)
 
-        print("!!!!!!! ПРОВЕРКА !!!!!!!!!")
 
         await db.commit()
         await db.refresh(new_accommodation)
-        print("!!!!!!!!!!! Записали !!!!!!!!!!!!!")
+
         return new_accommodation
 
     except Exception:
@@ -164,3 +163,19 @@ def create_accommodation(
     print("Добавление размещения завершено.")
 
     return RedirectResponse(url="/accommodations/add", status_code=303)
+
+@router.get("/{accommodation_id}", response_model=AccommodationSchema)
+async def get_accommodation_by_id(
+    accommodation_id: int,
+    db: AsyncSession = Depends(get_async_db) ):
+    result = await db.execute(
+        select(Accommodation)
+        .options(selectinload(Accommodation.prices))
+        .where(Accommodation.id == accommodation_id)
+    )
+    accommodation = result.scalar_one_or_none()
+
+    if accommodation is None:
+        raise HTTPException(status_code=404, detail="Accommodation not found")
+
+    return accommodation

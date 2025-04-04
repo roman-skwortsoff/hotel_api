@@ -1,12 +1,13 @@
 from pydantic import BaseModel
 from typing import List, Optional
+from pydantic.fields import Field
 from app.utils.enums import Weekday
 
 
 class ServicePriceSchema(BaseModel):
-    weekday_type: Weekday
+    weekday_type: Optional[Weekday]
     name: Optional[str] = None
-    duration_hours: Optional[int] = None
+    duration_hours: Optional[float] = Field(None, ge=0.5, le=24.0)
     price: float
 
     class Config:

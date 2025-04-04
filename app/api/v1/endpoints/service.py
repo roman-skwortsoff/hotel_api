@@ -42,18 +42,15 @@ async def create_service(
                 db.add(ServicePrice(
                     service_id=new_service.id,
                     name=price.name if hasattr(price, 'name') else None,
-                    weekday_type=Weekday(price.weekday_type),
-                    duration_hours = price.duration_hours if hasattr(price, 'duration_hours') else None,
+                    weekday_type = Weekday(price.weekday_type),
+                    duration_hours = price.duration_hours,
                     price=price.price,
                 ))
-                print( "Записываем цену: ", new_service.id, Weekday(price.weekday_type), price.duration_hours, price.price)
-
-
-        print("!!!!!!! ПРОВЕРКА !!!!!!!!!")
+                print( "Записываем цену: ", new_service.id)
 
         await db.commit()
         await db.refresh(new_service)
-        print("!!!!!!!!!!! Записали !!!!!!!!!!!!!")
+
         return new_service
 
     except Exception:

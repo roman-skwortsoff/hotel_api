@@ -4,6 +4,7 @@ from enum import Enum
 class Weekday(str, Enum):
     weekday = "weekday"
     weekend = "weekend"
+    anytime = "anyday"
 
 
 class AccommodationType(str, Enum):

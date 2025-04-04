@@ -25,7 +25,7 @@ class ServicePrice(Base):
     service_id = Column(Integer, ForeignKey("services.id"))
     name = Column(String(100), nullable=True)
     weekday_type = Column(Enum(Weekday), nullable=False)
-    duration_hours = Column(Integer, nullable=True)
+    duration_hours = Column(DECIMAL(10, 1), nullable=True)
     price = Column(DECIMAL(10, 2), nullable=False)
 
     service = relationship("Service", lazy="selectin", back_populates="prices")

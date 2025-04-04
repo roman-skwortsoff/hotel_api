@@ -1,9 +1,9 @@
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 from sqlalchemy.orm import declarative_base
-from app.db.base import Base
+from app.db.base import Base, BASE_DIR, env
 
 # Конфигурация для SQLite
-DATABASE_URL = "sqlite+aiosqlite:///./test.db"
+DATABASE_URL = env("DATABASE_URL")
 TEST_DATABASE_URL = "sqlite+aiosqlite:///:memory:"
 
 # Создаем движки
@@ -47,7 +47,7 @@ async def get_async_db() -> AsyncSession:
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
 
-sync_engine = create_engine("sqlite:///./test.db")
+sync_engine = create_engine(env("SYNC_DATABASE_URL"))
 SessionLocal = sessionmaker(bind=sync_engine)
 
 def get_db():
