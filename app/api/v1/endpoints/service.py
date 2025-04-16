@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.db.session import get_async_db, get_db
 from app.models.service import Service, ServicePrice
@@ -14,6 +14,22 @@ router = APIRouter(prefix="/services", tags=["Services"])
 async def get_service(db: AsyncSession = Depends(get_async_db)):
     result = await db.execute(select(Service).options(selectinload(Service.prices)))
     return result.scalars().all()
+
+@router.get("/{service_id}", response_model=ServiceSchema)
+async def get_service_by_id(
+    service_id: int,
+    db: AsyncSession = Depends(get_async_db) ):
+    result = await db.execute(
+        select(Service)
+        .options(selectinload(Service.prices))
+        .where(Service.id == service_id)
+    )
+    service = result.scalar_one_or_none()
+
+    if service is None:
+        raise HTTPException(status_code=404, detail="Service not found")
+
+    return service
 
 @router.post("/", response_model=ServiceSchema)
 async def create_service(

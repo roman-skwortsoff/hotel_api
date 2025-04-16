@@ -1,3 +1,4 @@
+from sqlalchemy import inspect
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 from sqlalchemy.orm import declarative_base
 from app.db.base import Base, BASE_DIR, env
@@ -28,10 +29,33 @@ AsyncSessionLocal = async_sessionmaker(
     expire_on_commit=False
 )
 
+
+# Чтобы были обязательно миграции
 async def init_db():
-    """Инициализация таблиц (аналог create_all)"""
+    """Проверка наличия таблиц (вместо создания)"""
     async with async_engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
+        def check_tables(sync_conn):
+            inspector = inspect(sync_conn)
+            existing_tables = inspector.get_table_names()
+            expected_tables = {"bookings", "accommodations"}  # допиши свои модели
+
+            missing_tables = expected_tables - set(existing_tables)
+            if missing_tables:
+                raise RuntimeError(
+                    f"❌ Не найдены таблицы: {missing_tables}. "
+                    f"Возможно, ты забыл применить миграции: `alembic upgrade head`"
+                )
+            else:
+                print("✅ Все нужные таблицы найдены.")
+
+        await conn.run_sync(check_tables)
+
+
+# Старый вариант, где таблицы автоматически создаются без миграций
+# async def init_db():
+#     """Инициализация таблиц (аналог create_all)"""
+#     async with async_engine.begin() as conn:
+#         await conn.run_sync(Base.metadata.create_all)
 
 async def get_async_db() -> AsyncSession:
     """Генератор сессий для зависимостей FastAPI"""

@@ -1,7 +1,7 @@
 from pydantic import BaseModel, validator
 from typing import List, Optional
 from app.utils.enums import Weekday, AccommodationType
-from datetime import time
+from datetime import date, datetime, timedelta, time
 from typing import Union
 
 
@@ -27,6 +27,23 @@ class AccommodationSchema(BaseModel):
     check_out_time: time
     extra_beds_available: int  # Добавили поле
     prices: List[AccommodationPriceSchema]
+
+    # Сериализатор time → строка (при выводе)
+    @validator("check_in_time", "check_out_time", check_fields=False)
+    def format_time_output(cls, v: time) -> str:
+        return v.strftime("%H:%M")
+
+    class Config:
+        orm_mode = True
+
+class AccommodationShortSchema(BaseModel):
+    id: int
+    name: str
+    type: AccommodationType
+    short_description: Optional[str] = None
+    capacity: int
+    check_in_time: time
+    check_out_time: time
 
     # Сериализатор time → строка (при выводе)
     @validator("check_in_time", "check_out_time", check_fields=False)

@@ -11,6 +11,7 @@ class Booking(Base):
     accommodation_id = Column(Integer, ForeignKey("accommodations.id"))
     check_in_date = Column(Date, nullable=False)
     check_out_date = Column(Date, nullable=False)
+    guests = Column(Integer, nullable=False)
     guest_name = Column(String(255), nullable=False)
     guest_phone = Column(String(50), nullable=False)
     guest_email = Column(String(255), nullable=False)
